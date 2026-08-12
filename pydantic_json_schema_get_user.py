@@ -3,17 +3,24 @@ from clients.users.private_users_client import get_private_users_client
 from clients.users.public_users_client import get_public_users_client
 from tools.fakers import fake
 
-from clients.users.users_schema import CreateUserRequestSchema
+from clients.users.users_schema import CreateUserRequestSchema, GetUserResponseSchema
+from tools.assertions.schema import validate_json_schema
 
 
 # Инициализируем клиент PublicUsersClient
 public_users_client = get_public_users_client()
 
 # Инициализируем запрос на создание пользователя
-create_user_request = CreateUserRequestSchema()
+create_user_request = CreateUserRequestSchema(
+    email=fake.email(),
+    password="string",
+    last_name="string", # Передаем аргументы в формате snake_case вместо camelCase
+    first_name="string",
+    middle_name="string"
+)
 # Отправляем POST запрос на создание пользователя
 create_user_response = public_users_client.create_user(create_user_request)
-print('Create user data:', create_user_response)
+
 
 # Инициализируем пользовательские данные для аутентификации
 authentication_user = AuthenticationUserSchema(
@@ -25,4 +32,7 @@ private_users_client = get_private_users_client(authentication_user)
 
 # Отправляем GET запрос на получение данных пользователя
 get_user_response = private_users_client.get_user(create_user_response.user.id)
-print('Get user data:', get_user_response)
+
+get_user_response_schema = GetUserResponseSchema.model_json_schema()
+
+validate_json_schema(instance=get_user_response.json(), schema=get_user_response_schema)
