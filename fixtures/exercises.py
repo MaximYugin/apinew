@@ -15,7 +15,7 @@ class ExerciseFixture(BaseModel):
 
 @pytest.fixture
 def exercises_client(function_user: UserFixture) -> ExercisesClient:
-    return get_exercises_client(function_user)
+    return get_exercises_client(function_user.authentication_user)
 
 
 @pytest.fixture

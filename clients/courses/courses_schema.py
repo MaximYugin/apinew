@@ -66,6 +66,7 @@ class UpdateCourseRequestSchema(BaseModel):
     # Добавили генерацию случайного описания
     description: str | None = Field(default_factory=fake.text)
     # Добавили генерацию случайного предполагаемого времени прохождения курса
+    estimated_time: str = Field(alias="estimatedTime", default_factory=fake.estimated_time)
 
 # Добавили описание структуры ответа на создание курса
 class CreateCourseResponseSchema(BaseModel):
@@ -73,3 +74,15 @@ class CreateCourseResponseSchema(BaseModel):
     Описание структуры ответа создания курса.
     """
     course: CourseSchema
+
+class UpdateCourseResponseSchema(BaseModel):
+    """
+    Описание структуры ответа обновления курса.
+    """
+    course: CourseSchema
+
+class GetCoursesResponseSchema(BaseModel):
+    """
+    Описание структуры ответа на получение списка курсов.
+    """
+    courses: list[CourseSchema]
